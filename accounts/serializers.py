@@ -20,3 +20,19 @@ class AccountSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class AccountDetailSerializer(AccountSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "nickname",
+            "name",
+            "email",
+            "birthday",
+            "gender",
+            "produce_me"
+        )
+
+
