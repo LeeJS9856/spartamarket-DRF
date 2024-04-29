@@ -41,7 +41,7 @@ class ProductDetailAPIView(APIView) :
     def put(self, request, product_id) :
         product = self.get_object(product_id)
         if product.author == request.user :
-            serializer = ProductDetailSerializer(product, data = request.data)
+            serializer = ProductDetailSerializer(product, data = request.data, partial=True)
             print(serializer)
             if serializer.is_valid(raise_exception=True) :
                 serializer.save()
