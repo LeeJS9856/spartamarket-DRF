@@ -41,7 +41,7 @@ class ProductDetailAPIView(APIView) :
     def put(self, request, product_id) :
         product = self.get_object(product_id)
         if product.author == request.user :
-            serializer = ProductDetailSerializer(product, data = request.data, partial=True)
+            serializer = ProductDetailSerializer(product, data = request.data)
             print(serializer)
             if serializer.is_valid(raise_exception=True) :
                 serializer.save()
@@ -56,3 +56,10 @@ class ProductDetailAPIView(APIView) :
             return Response(status=status.HTTP_204_NO_CONTENT)
         else :
             return Response(status=status.HTTP_403_FORBIDDEN)
+        
+    def dispatch(self, request, product_id):
+        if request.method == 'GET':
+            self.permission_classes = []
+        else:
+            self.permission_classes = [IsAuthenticated]
+        return super().dispatch(request, product_id)
