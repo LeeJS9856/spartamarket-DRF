@@ -29,8 +29,30 @@ class ProductAPIView(APIView) :
         
 class ProductDetailAPIView(APIView) :
     permission_classes = [IsAuthenticated]
+
+    def get_object(self, product_id):
+        return get_object_or_404(Product, pk=product_id)
+    
     def get(self, request, product_id) :
-        product = get_object_or_404(Product, pk=product_id)
-        print(product)
+        product = self.get_object(product_id)
         serializer = ProductDetailSerializer(product)
         return Response(serializer.data)
+    
+    def put(self, request, product_id) :
+        product = self.get_object(product_id)
+        if product.author == request.user :
+            serializer = ProductDetailSerializer(product, data = request.data, partial=True)
+            print(serializer)
+            if serializer.is_valid(raise_exception=True) :
+                serializer.save()
+                return Response(serializer.data)
+        else :
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
+    def delete(self, request, product_id):
+        product = self.get_object(product_id)
+        if product.author == request.user :
+            product.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else :
+            return Response(status=status.HTTP_403_FORBIDDEN)
