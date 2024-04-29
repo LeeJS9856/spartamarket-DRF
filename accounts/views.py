@@ -25,6 +25,4 @@ class AccountDetailAPIView(APIView):
     def get(self, request, username):
         if username == request.user.username:
             serializer = AccountDetailSerializer(self.get_object(username))
-            print(self.get_object(username))
-            print(serializer)
             return Response(serializer.data)
