@@ -6,3 +6,13 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ('title', 'image', 'price')
         read_only_fields = ("author",)
+
+class ProductDetailSerializer(ProductSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.pop("like_users")
+        return ret

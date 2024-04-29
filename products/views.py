@@ -4,7 +4,7 @@ from rest_framework.views import APIView, Response
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .serializers import ProductSerializer
+from .serializers import ProductSerializer, ProductDetailSerializer
 from .models import Product
 
 class ProductAPIView(APIView) :
@@ -27,3 +27,10 @@ class ProductAPIView(APIView) :
             self.permission_classes = []
         return super().dispatch(request)
         
+class ProductDetailAPIView(APIView) :
+    permission_classes = [IsAuthenticated]
+    def get(self, request, product_id) :
+        product = get_object_or_404(Product, pk=product_id)
+        print(product)
+        serializer = ProductDetailSerializer(product)
+        return Response(serializer.data)
