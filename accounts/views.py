@@ -26,3 +26,11 @@ class AccountDetailAPIView(APIView):
         if username == request.user.username:
             serializer = AccountDetailSerializer(self.get_object(username))
             return Response(serializer.data)
+        
+    def put(self, request, username) :
+        if username == request.user.username:
+            serializer = AccountDetailSerializer(self.get_object(username), data = request.data, partial = True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
