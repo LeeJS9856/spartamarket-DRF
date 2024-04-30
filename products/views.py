@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
+from django.core.paginator import Paginator
 from rest_framework.views import APIView, Response
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -11,7 +12,10 @@ class ProductAPIView(APIView) :
     permission_classes = [IsAuthenticated]
     def get(self, request) :
         products = Product.objects.all()
-        serializers = ProductSerializer(products, many=True)
+        pagenator = Paginator(products, 30)
+        page_number = request.GET.get("page")
+        page_product = pagenator.get_page(page_number)
+        serializers = ProductSerializer(page_product, many=True)
         return Response(serializers.data)
     
     def post(self, request) :
