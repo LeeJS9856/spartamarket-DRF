@@ -42,20 +42,17 @@ class ProductDetailAPIView(APIView) :
         product = self.get_object(product_id)
         if product.author == request.user :
             serializer = ProductDetailSerializer(product, data = request.data, partial=True)
-            print(serializer)
             if serializer.is_valid(raise_exception=True) :
                 serializer.save()
                 return Response(serializer.data)
-        else :
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_403_FORBIDDEN)
         
     def delete(self, request, product_id):
         product = self.get_object(product_id)
         if product.author == request.user :
             product.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        else :
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_403_FORBIDDEN)
         
     def dispatch(self, request, product_id):
         if request.method == 'GET':

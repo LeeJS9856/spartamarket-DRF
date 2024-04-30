@@ -26,6 +26,7 @@ class AccountDetailAPIView(APIView):
         if username == request.user.username:
             serializer = AccountDetailSerializer(self.get_object(username))
             return Response(serializer.data)
+        return Response(status=status.HTTP_403_FORBIDDEN)
         
     def put(self, request, username) :
         if username == request.user.username:
@@ -33,4 +34,13 @@ class AccountDetailAPIView(APIView):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, username) :
+        if username == request.user.username:
+            user = self.get_object(username)
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+    
+    
