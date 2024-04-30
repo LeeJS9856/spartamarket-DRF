@@ -35,4 +35,3 @@ class AccountDetailSerializer(AccountSerializer):
             "produce_me"
         )
 
-

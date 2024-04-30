@@ -44,3 +44,15 @@ class AccountDetailAPIView(APIView):
         return Response(status=status.HTTP_403_FORBIDDEN)
     
     
+class FollowAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, username) :
+        user = get_object_or_404(get_user_model(), username=username)
+        if user != request.user :
+            if user.followers.filter(id=request.user.id).exists() :
+                user.followers.remove(request.user)
+            else :
+                user.followers.add(request.user)
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
