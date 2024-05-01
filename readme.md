@@ -61,7 +61,7 @@
 
 ## API 명세
 
-![API](https://documenter.getpostman.com/view/34437162/2sA3JDiRPK)
+[API명세](https://documenter.getpostman.com/view/34437162/2sA3JDiRPK)
 
 
 </br>
