@@ -43,7 +43,16 @@ class AccountDetailAPIView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_403_FORBIDDEN)
     
-    
+class AccountDetailPasswordAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def put(self, request, username) :
+        if username == request.user.username:
+            serializer = AccountDetailSerializer(self.get_object(username), data = request.data, partial = True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
 class FollowAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, username) :

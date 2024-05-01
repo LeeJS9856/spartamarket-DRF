@@ -21,7 +21,6 @@ class AccountSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
 class AccountDetailSerializer(AccountSerializer):
     class Meta:
         model = User
@@ -34,4 +33,3 @@ class AccountDetailSerializer(AccountSerializer):
             "gender",
             "produce_me"
         )
-

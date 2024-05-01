@@ -12,10 +12,24 @@ class ProductAPIView(APIView) :
     permission_classes = [IsAuthenticated]
     def get(self, request) :
         products = Product.objects.all()
+
+        categorie = request.GET.get('categorie')
+        if categorie == 'title' :
+            search = request.GET.get("search")
+            products = products.filter(title__contains=search)
+        elif categorie == 'nickname' :
+            search = request.GET.get("search")
+            products = products.filter(author__contians=search)
+        elif categorie == 'content' :
+            search = request.GET.get("search")
+            products = products.filter(content__contians=search)
+
         pagenator = Paginator(products, 30)
         page_number = request.GET.get("page")
-        page_product = pagenator.get_page(page_number)
-        serializers = ProductSerializer(page_product, many=True)
+        if page_number is not None :
+            products = pagenator.get_page(page_number)
+
+        serializers = ProductSerializer(products, many=True)
         return Response(serializers.data)
     
     def post(self, request) :
