@@ -64,3 +64,13 @@ class ProductDetailAPIView(APIView) :
         else:
             self.permission_classes = [IsAuthenticated]
         return super().dispatch(request, product_id)
+    
+class ProductLikeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, product_id) :
+        product = get_object_or_404(Product, id=product_id)
+        if product.like_users.filter(id=request.user.id).exists() :
+            product.like_users.remove(request.user)
+        else :
+            product.like_users.add(request.user)
+        return Response(status=status.HTTP_200_OK)
