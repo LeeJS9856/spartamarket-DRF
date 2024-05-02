@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.cache import cache
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from rest_framework.views import APIView, Response
@@ -11,6 +12,7 @@ from .models import Product
 class ProductAPIView(APIView) :
     permission_classes = [IsAuthenticated]
     def get(self, request) :
+        cache_key = "product_list"
         products = Product.objects.all()
 
         categorie = request.GET.get('categorie')
@@ -30,6 +32,8 @@ class ProductAPIView(APIView) :
             products = pagenator.get_page(page_number)
 
         serializers = ProductSerializer(products, many=True)
+        json_data = serializers.data
+        cache.set(cache_key, json_data, 180)
         return Response(serializers.data)
     
     def post(self, request) :
