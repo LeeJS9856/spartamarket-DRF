@@ -33,7 +33,7 @@ class ProductAPIView(APIView) :
 
         serializers = ProductSerializer(products, many=True)
         json_data = serializers.data
-        cache.set(cache_key, json_data, 180)
+        cache.set(cache_key, json_data, 60)
         return Response(serializers.data)
     
     def post(self, request) :
